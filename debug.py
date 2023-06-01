@@ -12,7 +12,7 @@ def force_float(msg):
     return number
 
 
-def force_range(msg, min, max):
+def force_range(msg, min: float, max: float):
   """A modified version of the function 'force_float'.
   In addition to error catching, this function ensures the player inputs a number
   inbetween the variables min & max"""

@@ -11,8 +11,5 @@ def token_randomizer():
   # Return a random number from 0 to last index of "tokens" list
   random = rand.randint(0, len(tokens) - 1)
 
-  # Return both items in the 
-  if random > len(tokens) - 1:
-    raise ValueError(f"Error! Array in tokens[{random}] not found.")
-    return
+  # Return both items in the 2d array
   return tokens[random][0], tokens[random][1]

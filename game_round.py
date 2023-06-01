@@ -3,110 +3,118 @@ from time import sleep
 from debug import force_range
 
 
-def round_loop(start_bal):
+def round_loop(start_bal: float):
   """Starts each round, and asks for the player"""
-  money_spent = 0
   #Variable to calculate money gained
   money_gained = 0
-  money_lost = 0
+  #Variable to check the total amount of money that has been betted
+  money_betted = 0
   #Loop condition
   loop = True
-  #Replay condition
-  first_round = True
-  #Different possible answers to play_round
-  yes = ["yes", "y", "yeah", "sure"]
-  no = ["no", "n", "nope", "nah"]
-  # Rounds happen here
   while loop:
-    play_round = ""
-    # If the player has spent more then 10 dollars or their balance is less then 1$, tell them & end loop.
-    if money_spent >= 10 or start_bal < 1:
-      if money_spent >= 10:
-        print("""--------------------------
-        You have spent the maximum amount of money allowed.
-        --------------------------""")
-      elif start_bal < 1:
-        print("""--------------------------
-        Insufficient funds to continue.
-        --------------------------""")
+    if money_betted > 10:
       loop = False
-      continue
-    # Ask player if they would like to play another round
-    if money_spent > 0 and money_spent <= 10 and not first_round:
-      play_round = input("""--------------------------
-      Would you like to play another round?
-      --------------------------""").strip().lower()
-    if play_round in yes or first_round:  
-      money_betted = force_range("""--------------------------
-      How much money would you like to bet?
-      --------------------------""", 1, 10)
-    # Ensure that the amount betted doesn't exceed $10, or that it plus money_spent doesn't exceed $10\
-    if money_betted + money_spent > 10:
-      valid = False
       print("""--------------------------
-      Too high of a bet, you are only allowed to spend up to 10 dollars in total.
-      --------------------------""")
-      while not valid:
-        money_betted = force_range("""--------------------------
-        How much money would you like to bet?
-        --------------------------""", 1, 10)
-        if money_betted + money_spent > 10:
-          print("""--------------------------
-            Too high of a bet, you are only allowed to spend up to 10 dollars in total.
-            --------------------------""")
-        else:
-          valid = True
-    money_spent += money_betted
-    if play_round in yes or first_round:
-      start_bal -= money_betted
-      # Generate token
-      print("""--------------------------
-      Generating token....
-      --------------------------""")
-      token, token_value = token_rand()
-      print("""--------------------------
-      Token Generation complete!
-      --------------------------""")
-      print("""--------------------------
-      The token you won is...
-      --------------------------""")
-      sleep(3)
-      if token == "unicorn":
-        print("""--------------------------
-        Congratulations, you won the Unicorn token,
-        which means that you get 5 dollars!
-        --------------------------""")
-      elif token == "zebra":
-        print("""--------------------------
-        You won the Zebra token, which means you get 50 cents!
-        --------------------------""")
-      elif token == "horse":
-        print("""--------------------------
-        You won the Horse token, which means you get 50 cents!
-        --------------------------""")
-      elif token == "donkey":
-        print("""--------------------------
-        Sorry to say, but you got the donkey token, which means you don't win.
-        But hey, there's always next time!
-        --------------------------""")
-      start_bal += money_gained
-      money_gained += (token_value * money_betted)
-      if money_gained + (token_value * money_betted) > money_lost:
-        while money_lost > 0:
-          money_lost -= 1
-      first_round = False
-    elif play_round in no or money_spent >= 10:
-      loop = False
-    else:
-      print("""--------------------------
-      That isn't an answer, please ask again
+      You've betted the maximum amount of money, time to see your winnings
       --------------------------""")
       continue
-    if play_round in yes:
-      print(play_round + "is a yes")
-    elif play_round in no:
-      print(play_round + "is a no")
-    else:
-      print(play_round + "is not a yes, or a no")
+    # Ask player for their bet
+    betting_amount = request_bet(money_betted, start_bal)
+    # Update money gained, balance, and amount betted
+    money_gained -= betting_amount
+    start_bal -= betting_amount
+    money_betted += betting_amount
+    # Generate a reward
+    reward = reward_player(betting_amount)
+    # Update money gained & balance
+    money_gained += reward
+    start_bal += reward
+    # Ask player if they want to continue playing
+    loop = continue_game()
   else:
-    return start_bal, money_gained, money_lost
+    return money_gained, start_bal
+
+
+def reward_player(money_bet: float) -> float:
+  # Generate Token
+  print("""--------------------------
+  Generating Token...
+  --------------------------""")
+  # Start token generation
+  token, token_value = token_rand()
+  print("""--------------------------
+  Token Generation complete!
+  --------------------------""")
+  print("""--------------------------
+  The token you won is...
+  --------------------------""")
+  sleep(3)
+  # Provide feedback
+  if token == "unicorn":
+    print(f"""--------------------------
+    Congratulations, you won the Unicorn token, which means that you get ${token_value * money_bet:.2f}!
+    --------------------------""")
+  elif token == "horse":
+    print(f"""--------------------------
+    You won the Horse token, which means you get ${token_value * money_bet:.2f}!
+    --------------------------""")
+  elif token == "zebra":
+    print(f"""--------------------------
+    You won the Zebra token, which means you get ${token_value * money_bet:.2f}!
+    --------------------------""")
+  elif token == "donkey":
+    print("""--------------------------
+    Sorry to say, but you got the donkey token, which means you don't win.
+    But hey, there's always next time!
+    --------------------------""")
+  # Return the money won
+  return token_value * money_bet
+
+
+def request_bet(money_spent: float, balance: float) -> float:
+  loop = True
+  while loop:
+    # Ask player how much money they want to bet
+    betting_amount = force_range("""--------------------------
+    How much would you like to bet?
+    --------------------------""", 1, 10)
+    # If the player bets more then $10, or more then the total amount of money spent,
+    # ask for a lower bet
+    if balance < betting_amount or betting_amount > (10 - money_spent):
+      print("""--------------------------
+      Too high of a bet, please try again.
+      --------------------------""")
+      continue
+    # If the player bets less then $1, ask for a higher bet
+    elif betting_amount < 1:
+      print("""--------------------------
+      Too low of a bet, please try again
+      --------------------------""")
+    else:
+      loop = False
+  return betting_amount
+
+
+def continue_game() -> bool:
+  #Lists of possible responses
+  yes = ["yes", "yeah", "y"]
+  no = ["no", "nah", "n"]
+  loop = True
+  while loop:
+    # Ask player if they would like to continue playing
+    response = input("""--------------------------
+    would you like to play another round? Y/N
+    --------------------------""").lower().strip()
+    # If yes, continue playing the game
+    if response in yes:
+      loop = False
+      return True
+    # Else if no, stop playing
+    elif response in no:
+      loop = False
+      return False
+    # If response matches none of the possible responses, ask again
+    else:
+      print("""--------------------------
+      That isn't an answer, please try again.
+      --------------------------""")

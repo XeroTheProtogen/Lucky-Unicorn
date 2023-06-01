@@ -1,6 +1,7 @@
 from time import sleep
 from debug import force_range
 
+
 def start():
   """The beginning of Lucky Unicorn, gets player balance
   & prints out instructions for the game."""
@@ -13,43 +14,49 @@ def start():
   balance = force_range(question, 1, 10)
   # Simply checks for a input from the keyboard
   playing_game = input("Press <enter> to begin.")
-  if playing_game != None:
-    # Print out instructions
-    print("""--------------------------
-    Welcome to the Lucky Unicorn Game!
-    --------------------------""")
-    sleep(3)
-    print("")
-    print("""--------------------------
-    You will need to pay one dollar before each round
-    --------------------------""")
-    sleep(2)
-    print("")
-    print("""--------------------------
-    The rules are simple: You will receive a random token in each round, 
-    and depending on the type of token, you will either win 5 dollars, 50 cents, or nothing.
-    --------------------------""")
-    sleep(5)
-    print("")
-    print("""--------------------------
-    Here are the types of tokens you could get: 
-    Unicorn - 5 dollars, Zebra - 50 cents, Horse - 50 cents, Donkey - 0 dollars.
-    --------------------------""")
-    sleep(3)
-    print("")
-    print("""--------------------------
-    Before each round, you must bet some of your money. 
-    Your winnings will be multiplied by how much money you bet.
-    --------------------------""")
-    sleep(5)
-    print("")
-    print("""--------------------------
-    You may only keep playing if you still have money and haven't spent a total of 10 dollars on this game.
-    --------------------------""")
-    sleep(2)
-    print("")
-    print("""--------------------------
-    Now, let's begin!
-    --------------------------""")
+  read_instructions = input("Do you know the rules to Lucky Unicorn? Y/N").lower().strip()
+  yes = ["yes", "y", "yeah"]
+  no = ["no", "n", "nah"]
+  loop = True
+  while loop:
+    if playing_game != None and read_instructions in no:
+      # Print out instructions
+      print("""--------------------------
+      \033[33mWelcome to the Lucky Unicorn Game!
+      \033[37m--------------------------""")
+      sleep(3)
+      print("")
+      print("""--------------------------
+      The rules are simple: You will bet some of your money, then receive a token.
+      --------------------------""")
+      sleep(4)
+      print("")
+      print("""--------------------------
+      The token you receive will add it's value, multiplied by your bet, to your balance.
+      --------------------------""")
+      sleep(3)
+      print("")
+      print("""--------------------------
+      Here are the rewards:
+      \033[37mDonkey - $0
+      \033[36mHorse - $0.5
+      \033[36mZebra - $0.5
+      \033[35mUnicorn - $5
+      \033[37m--------------------------""")
+      sleep(5)
+      print("")
+      print("""--------------------------
+      Now, let's begin!
+      --------------------------""")
+      loop = False
+    elif read_instructions in yes:
+      print("""--------------------------
+      Well then, let's get started!
+      --------------------------""")
+      loop = False
+    else:
+      print("""--------------------------
+      Error, please ask again.
+      --------------------------""")
   # Returns the player's balance for later use.
   return balance

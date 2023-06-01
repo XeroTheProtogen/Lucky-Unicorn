@@ -1,7 +1,7 @@
 from time import sleep
 
 
-def finish_game(balance, gained, lost):
+def finish_game(balance, gained):
   sleep(3)
   print("""--------------------------
   Thanks for playing Lucky Unicorn.
@@ -11,13 +11,18 @@ def finish_game(balance, gained, lost):
   Your total balance is: ${balance:.2f}.
   --------------------------""")
   sleep(4)
-  if not gained <= 0:
+  if gained > 0:
     print(f"""--------------------------
-    You have {gained:.2f} more dollars then you originally had.
+    Congratulations, you won ${gained:.2f} total
     --------------------------""")
-  elif not lost <= 0:
+  elif gained < 0:
     print(f"""--------------------------
-    You lost a total of ${lost:.2f}.
+    Shame, you lost a total of ${gained * -1:.2f}
+    --------------------------""")
+  else:
+    print("""--------------------------
+    You somehow managed to not lose nor gain any money...
+    I'm not sure if you're lucky or unlucky...
     --------------------------""")
   sleep(4)
   print("""--------------------------
