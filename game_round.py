@@ -52,19 +52,19 @@ def reward_player(money_bet: float) -> float:
   # Provide feedback
   if token == "unicorn":
     print(f"""--------------------------
-    Congratulations, you won the Unicorn token, which means that you get ${token_value * money_bet:.2f}!
-    --------------------------""")
+    Congratulations, you won the \033[35mUnicorn \033[37mtoken, which means that you get \033[35m${token_value * money_bet:.2f}!
+    \033[37m--------------------------""")
   elif token == "horse":
     print(f"""--------------------------
-    You won the Horse token, which means you get ${token_value * money_bet:.2f}!
-    --------------------------""")
+    You won the \033[36mHorse \033[37mtoken, which means you get \033[36m${token_value * money_bet:.2f}!
+    \033[37m--------------------------""")
   elif token == "zebra":
     print(f"""--------------------------
-    You won the Zebra token, which means you get ${token_value * money_bet:.2f}!
-    --------------------------""")
+    You won the \033[36mZebra \033[37mtoken, which means you get \033[36m${token_value * money_bet:.2f}!
+    \033[37m--------------------------""")
   elif token == "donkey":
     print("""--------------------------
-    Sorry to say, but you got the donkey token, which means you don't win.
+    Sorry to say, but you got the Donkey token, which means you don't win.
     But hey, there's always next time!
     --------------------------""")
   # Return the money won

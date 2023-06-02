@@ -7,7 +7,7 @@ def force_float(msg):
       number = float(input(msg))
       valid = True
     except ValueError:
-      print("Please input a valid number")
+      print("\033[1;37;41mPlease input a valid number")
   else:
     return number
 
@@ -23,10 +23,8 @@ def force_range(msg, min: float, max: float):
       if numb >= min and numb <= max:
         valid = True
       else:
-        print(f"Number must be within the range of {min}-{max}.")
+        print(f"\033[1;37;41mNumber must be within the range of {min}-{max}.")
     except ValueError:
-      print(f"Please input a valid number from {min}-{max}.")
+      print(f"\033[1;37;41mPlease input a valid number from {min}-{max}.")
   else:
     return numb
-
-
