@@ -18,10 +18,17 @@ def start():
   yes = ["yes", "y", "yeah"]
   no = ["no", "n", "nah"]
   loop = True
+  
   while loop:
-    if playing_game != None and read_instructions in no:
+    if read_instructions not in yes and read_instructions not in no:
+      print("\033[1;37;41mError, please try again")
+      read_instructions = input("\033[0;37mDo you know the rules to Lucky Unicorn? Y/N").lower().strip()
+      if read_instructions in yes or read_instructions in no:
+        loop = False;
+        break;
+  if playing_game != None and read_instructions in no:
       # Print out instructions
-      print("""--------------------------
+      print("""\033[0;37m--------------------------
       \033[33mWelcome to the Lucky Unicorn Game!
       \033[37m--------------------------""")
       sleep(3)
@@ -48,15 +55,9 @@ def start():
       print("""--------------------------
       Now, let's begin!
       --------------------------""")
-      loop = False
-    elif read_instructions in yes:
-      print("""--------------------------
+  elif read_instructions in yes:
+      print("""\033[0;37m--------------------------
       Well then, let's get started!
-      --------------------------""")
-      loop = False
-    else:
-      print("""--------------------------
-      Error, please ask again.
       --------------------------""")
   # Returns the player's balance for later use.
   return balance
